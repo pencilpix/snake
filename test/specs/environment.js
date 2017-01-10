@@ -54,8 +54,8 @@ describe('Environment', () => {
   describe('Vector class', () => {
     it('should be a class that has x and y props', () => {
       let vector = new Vector(3, 4);
-      expect(vector.x).toContain(3);
-      expect(vector.y).toContain(4);
+      expect(vector.x).toEqual(3);
+      expect(vector.y).toEqual(4);
     });
   });
 });
