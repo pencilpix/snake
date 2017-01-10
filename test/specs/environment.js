@@ -1,5 +1,5 @@
 
-import { level, elements } from '../../src/assets/js/es5/modules/environment';
+import { level, elements, Vector } from '../../src/assets/js/es5/modules/environment';
 
 describe('Environment', () => {
   describe('levels', () => {
@@ -49,5 +49,13 @@ describe('Environment', () => {
         }
       });
     })
+  });
+
+  describe('Vector class', () => {
+    it('should be a class that has x and y props', () => {
+      let vector = new Vector(3, 4);
+      expect(vector.x).toContain(3);
+      expect(vector.y).toContain(4);
+    });
   });
 });
