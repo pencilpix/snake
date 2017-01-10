@@ -39,3 +39,10 @@ export var direction = {
   s: { x: 1, y: 0}
 };
 
+
+export class Vector {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
