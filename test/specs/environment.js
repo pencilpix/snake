@@ -8,10 +8,6 @@ describe('Environment', () => {
       expect(level.constructor).toEqual(Array);
     });
 
-    it('should be an array of stings (NxN)', () => {
-      expect(typeof level[0]).toBe('string');
-      expect(level.length).toEqual(level[0].length);
-    });
   });
 
   describe('elements', () => {

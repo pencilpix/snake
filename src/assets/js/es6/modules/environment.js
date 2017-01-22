@@ -2,18 +2,57 @@
  * basic level simulation
  * @type {Array}
  */
+// export var level = [
+//   'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x   x                                              x   x',
+//   'x  xx                                              xx  x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'x  xx                                              xx  x',
+//   'x   x                                              x   x',
+//   'x                                                      x',
+//   'x                                                      x',
+//   'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+// ];
 export var level = [
-  'xxxxxxxxx',
-  'x       x',
-  'x       x',
-  'x       x',
-  'x       x',
-  'x       x',
-  'x       x',
-  'x       x',
-  'xxxxxxxxx'
+  'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
+  'x                         x',
+  'x                         x',
+  'x                         x',
+  'x                         x',
+  'x                         x',
+  'x                         x',
+  'x                         x',
+  'x                         x',
+  'x                         x',
+  'x                         x',
+  'x                         x',
+  'x                         x',
+  'x                         x',
+  'x                         x',
+  'x                         x',
+  'xxxxxxxxxxxxxxxxxxxxxxxxxxx'
 ];
-
 
 
 /**

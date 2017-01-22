@@ -63,7 +63,8 @@ gulp.task('serve', () => {
   gulp.watch(['./src/**/*.html', './src/assets/images/**/*']).on('change', browserSync.reload);
 
   gulp.watch('./src/assets/sass/**/*.sass', ['sass']);
-  gulp.watch('./src/assets/js/es6/**/*.js', ['babel', 'browserify']);
+  gulp.watch('./src/assets/js/es6/**/*.js', ['babel']);
+  gulp.watch('./src/assets/js/es5/**/*.js', ['browserify']);
 });
 
 
