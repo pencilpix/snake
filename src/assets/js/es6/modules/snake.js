@@ -10,11 +10,15 @@ export class Snake {
     this.size = new Vector(1, 1);
     this.speed = new Vector(0, 0);
     this.step = 0.05;
+    this.maxSpeed = 10;
     this.direction = {
       up    : false,
       right : false,
       bottom: false,
       left  : true
     };
+  }
+
+  moveX() {
   }
 }
