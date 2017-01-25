@@ -22,4 +22,14 @@ describe('Level class', () => {
     expect(level.grid[0].length).toEqual(utils.SIMPLE_PLAN[0].length);
   });
 
+  it('should make grid property of wall or null', () => {
+    let otherActors = level.grid.reduce((pre, cur) => {
+      let ar = cur.filter(item => item !== null && item !== 'wall');
+      if(ar.length) pre.push(ar[0]);
+      return pre;
+    }, []);
+
+    expect(otherActors.length).toEqual(0);
+  });
+
 });
