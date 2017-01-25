@@ -1,49 +1,17 @@
 /**
- * basic level simulation
+ * a plan that describe the grid of the level
  * @type {Array}
  */
-// export var level = [
-//   'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x   x                                              x   x',
-//   'x  xx                                              xx  x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'x  xx                                              xx  x',
-//   'x   x                                              x   x',
-//   'x                                                      x',
-//   'x                                                      x',
-//   'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-// ];
-export var level = [
+export const SIMPLE_PLAN = [
   'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
   'x                         x',
   'x                         x',
   'x                         x',
+  'x        o                x',
   'x                         x',
   'x                         x',
   'x                         x',
-  'x                         x',
-  'x                         x',
+  'x            s            x',
   'x                         x',
   'x                         x',
   'x                         x',
