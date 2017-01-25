@@ -8,11 +8,12 @@ describe('Level class', () => {
     level = new Level(utils.SIMPLE_PLAN);
   });
 
-  it('should has height equal to plan array length', () => {
+  it('should have height equal to plan array length', () => {
     expect(level.height).toEqual(utils.SIMPLE_PLAN.length);
   });
 
   it('should have width equal to plan item length', () => {
     expect(level.width).toEqual(utils.SIMPLE_PLAN[0].length);
   });
+
 });
