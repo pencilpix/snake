@@ -1,4 +1,7 @@
 import { Level }  from '../../src/assets/js/es5/modules/level';
+import { Food }   from '../../src/assets/js/es5/modules/food';
+import { Body }   from '../../src/assets/js/es5/modules/snake-body';
+import { Snake }  from '../../src/assets/js/es5/modules/snake';
 import * as utils from '../../src/assets/js/es5/modules/utils';
 
 describe('Level class', () => {
@@ -32,4 +35,17 @@ describe('Level class', () => {
     expect(otherActors.length).toEqual(0);
   });
 
-});
+  it('should have actors property as array of Snake, Body or Food classes', () => {
+    let food = level.actors.filter(item => item instanceof Food);
+    let body = level.actors.filter(item => item instanceof Body);
+    let snake = level.actors.filter(item => item instanceof Snake);
+    let other = level.actors.filter(item => !item instanceof Food && !item instanceof Snake && !item instanceof Body);
+
+    expect(Array.isArray(level.actors)).toBe(true, 'level.actors is not array');
+    expect(food.length).toEqual(1, 'food in simple plan is one');
+    expect(snake.length).toEqual(1, 'snake in simple plan is one');
+    expect(body.length).toEqual(0, 'there is no body parts yet');
+    expect(other.length).toEqual(0, 'there is no other actors');
+    });
+
+  });
