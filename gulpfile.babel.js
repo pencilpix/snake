@@ -85,5 +85,5 @@ gulp.task('test', ['babel:test'], (done) => {
 })
 
 gulp.task('watch:test', function() {
-  gulp.watch(['src/assets/js/es5/**/*.js', 'test/specs/*.js'], ['test'])
+  gulp.watch(['src/assets/js/es5/**/*.js', 'src/assets/js/es6/**/*.js', 'test/specs/*.js'], ['test'])
 });
