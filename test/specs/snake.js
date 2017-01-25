@@ -17,10 +17,15 @@ describe('Snake class', () => {
   it('should have step property equal to 0.05', () => {
     expect(snake.step).toEqual(0.05);
   });
+
   it('should have speed property of x = 0, y = 0', () => {
     expect(snake.speed instanceof Vector).toBe(true);
     expect(snake.speed.x).toEqual(0);
     expect(snake.speed.y).toEqual(0);
+  });
+
+  it('should have maxSpeed property equal to 10', () => {
+    expect(snake.maxSpeed).toEqual(10);
   });
 
   it('should have size property of x = 1, y = 1', () => {
@@ -35,6 +40,12 @@ describe('Snake class', () => {
         expect(snake.direction[dir]).toBe(true);
       else
         expect(snake.direction[dir]).toBe(false);
+    });
+  });
+
+  describe('Snake.moveX', () => {
+    it('should be defined', () => {
+      expect(snake.moveX).toBeDefined();
     });
   });
 });
