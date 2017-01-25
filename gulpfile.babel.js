@@ -20,12 +20,14 @@ gulp.task('sass', () => {
 
 gulp.task('babel', () => {
   return gulp.src('src/assets/js/es6/**/*.js')
+    .pipe($.plumber())
     .pipe($.babel())
     .pipe(gulp.dest('src/assets/js/es5'));
 });
 
 gulp.task('babel:test', () => {
   return gulp.src('test/specs/**/*.js')
+    .pipe($.plumber())
     .pipe($.babel())
     .pipe($.rename((path) => {
       path.basename += '.spec';
