@@ -46,6 +46,5 @@ describe('Level class', () => {
     expect(snake.length).toEqual(1, 'snake in simple plan is one');
     expect(body.length).toEqual(0, 'there is no body parts yet');
     expect(other.length).toEqual(0, 'there is no other actors');
-    });
-
   });
+});
