@@ -1,11 +1,14 @@
 import { Food } from '../../src/assets/js/es5/modules/food';
 import { Vector } from '../../src/assets/js/es5/modules/vector';
+import { Level } from '../../src/assets/js/es5/modules/level';
+import * as utils from '../../src/assets/js/es5/modules/utils';
 
 describe('Food class', () => {
-  let food, vector;
+  let food, vector, level;
   beforeAll(() => {
     vector = new Vector(2, 3);
     food = new Food(vector);
+    level = new Level(utils.SIMPLE_PLAN);
   });
 
   it('should have pos property of x = 2 and y = 3', () => {
