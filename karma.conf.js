@@ -25,6 +25,9 @@ module.exports = function(config) {
       'src/js/es6/**/*.js'
     ],
 
+    proxies: {
+      '/assets/images/': '/images/'
+    },
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
