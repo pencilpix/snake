@@ -1,83 +1,22 @@
-// @import modules/general
-#game
-  position: relative
+@import ./modules/font
 
-// table tr > td:nth-child(2n+1)
-//   background-color: darken(green, 3%)
+html,
+body
+  width: 100%
+  height: 100%
+  padding: 0
+  margin: 0
 
-// table tr:nth-child(7) > td:nth-child(8)
-//   background-color: orange
-//   opacity: 0.8
-//   z-index: 2000
-//   position: relative
+.game-container
+  // display: table
+  width: 100%
+  height: 100%
+  text-align: center
+  padding: 1rem
+  box-sizing: border-box
 
-// table tr:nth-child(2n+1)
-//   background-color: darken(green, 3%)
-
-.game-background
-  table-layout: fixed
-  border-spacing: 0
-  background-color: white
-
-  tr, td
-    border-spacing: 0
-
-  .game-wall
-    position: relative
-
-    &:after
-      content: ''
-      display: block
-      position: absolute
-      width: 2px
-      transform(translateX(-50%))
-      background-color: black
-      top: 0
-      left: 50%
-      bottom: 0
-
-  tr:nth-child(2)
-    .game-wall:after
-      top: -10px
-
-
-  tr:first-child, tr:last-child
-    .game-wall:after
-      width: auto
-      height: 2px
-      top: 50%
-      left: 0
-      right: 0
-      bottom: auto
-      transform: translateY(-50%);
-
-    .game-wall:first-child:after
-      width: 50%
-      left: 50%
-
-    .game-wall:last-child:after
-      width: 50%
-      right: 50%
-
-
-.game-actors
-  position: absolute
-  z-index: 1000
-  top: 0
-  left: 0
-.game-actors > div
-  position: absolute
-
-.game-actors__body, .game-actors__snake
-  background-color: black
-
-.game-actors__food
-  background: yellow
-
-.game-actors__body:nth-child(2n + 1)
-  background-color: black
-
-.game-actors__snake
-  border-radius(50%)
-  background-color: purple
-  z-index: 1999
+  canvas
+    max-width: 100%
+    max-height: 100%
+    width: auto
+    height: auto
