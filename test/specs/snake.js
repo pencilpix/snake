@@ -18,8 +18,8 @@ describe('Snake class', () => {
     expect(snake.pos.y).toEqual(3, 'y is not equal to 3');
   });
 
-  it('should have step property equal to 0.05', () => {
-    expect(snake.step).toEqual(0.05);
+  it('should have step property equal to 1', () => {
+    expect(snake.step).toEqual(1);
   });
 
   it('should have speed property of x = 0, y = 0', () => {
@@ -28,11 +28,9 @@ describe('Snake class', () => {
     expect(snake.speed.y).toEqual(0);
   });
 
-  it('should have maxSpeed property equal to 10', () => {
-    expect(snake.maxSpeed).toEqual(10);
-  });
-
   it('should have size property of x = 1, y = 1', () => {
+    level.sounds = {fed: {play: function() {}}};
+
     expect(snake.size instanceof Vector).toBe(true);
     expect(snake.size.x).toEqual(1);
     expect(snake.size.y).toEqual(1);
@@ -51,59 +49,88 @@ describe('Snake class', () => {
     it('should make snake move 5 points to left', () => {
       let direction = { up: false, right: false, bottom: false, left: true };
       let oldSnakePosition = levelSnake.pos;
-      levelSnake.step = .5;
+      levelSnake.step = 5;
 
       levelSnake.move(level, direction);
+      levelSnake.step = 1;
+
       expect(levelSnake.pos.x).toEqual(oldSnakePosition.x - 5);
       expect(levelSnake.pos.y).toEqual(oldSnakePosition.y);
     });
 
-    it('should not move snake to up, but left 0.5 point', () => {
-      let direction = { up: true, right: false, bottom: false, left: false };
-
-      levelSnake.pos.x += 0.5;
-      levelSnake.pos.y += 0.5;
-
+    it('should not move snake to right, but left 1 point', () => {
+      let direction = { up: false, right: true, bottom: false, left: false };
       let oldSnakePosition = levelSnake.pos;
-      levelSnake.step = .05;
-
       levelSnake.move(level, direction);
-      expect(levelSnake.pos.x).toEqual(oldSnakePosition.x - 0.5);
+      expect(levelSnake.pos.x).toEqual(oldSnakePosition.x - 1);
       expect(levelSnake.pos.y).toEqual(oldSnakePosition.y);
     });
 
     it('should move snake to up', () => {
       let direction = { up: true, right: false, bottom: false, left: false };
-
-      levelSnake.pos.y -= 0.5;
       let oldSnakePosition = levelSnake.pos;
-      levelSnake.step = .05;
-
 
       levelSnake.move(level, direction);
       expect(levelSnake.pos.x).toEqual(oldSnakePosition.x);
-      expect(levelSnake.pos.y).toEqual(oldSnakePosition.y - 0.5);
+      expect(levelSnake.pos.y).toEqual(oldSnakePosition.y - 1);
+    });
+
+
+    it('should add new body part', () => {
+      let direction = { up: false, right: false, bottom: false, left: true };
+      let partsNo = levelSnake.parts.length;
+      levelSnake.pos.x = 10;
+      levelSnake.pos.y = 4;
+
+      levelSnake.move(level, direction);
+      expect(levelSnake.parts.length).toEqual(partsNo + 1);
+    });
+
+    it('should remove the last part and add new part with the new position', () => {
+      let direction = { up: false, right: false, bottom: false, left: true };
+      let lastPart = levelSnake.parts[levelSnake.parts.length - 1];
+      let newPos = new Vector(levelSnake.parts[0].x - 1, levelSnake.parts[0].y)
+
+      levelSnake.move(level, direction);
+      expect(levelSnake.parts[levelSnake.parts.length - 1]).not.toEqual(lastPart);
+      expect(levelSnake.parts[0]).toEqual(newPos);
     });
   });
 
+  describe('snake.updateBody', () => {
+    it('should add new body as first body with new pos, should be one move to left', () => {
+      let lastPart = levelSnake.parts[levelSnake.parts.length - 1];
+      let firstPart = levelSnake.parts[0];
+      let newPos = new Vector(firstPart.x - 1, firstPart.y);
 
-  describe('Snake.isSameDirection', () => {
-    it('should be same direction as default, left', () => {
+      levelSnake.updateBody(newPos);
+      expect(lastPart).not.toEqual(levelSnake.parts[levelSnake.parts.length - 1])
+      expect(firstPart).toEqual(levelSnake.parts[1]);
+    })
+  });
+
+  describe('snake.increaseParts', () => {
+    it('should add new part to the parts array', () => {
       let direction = { up: false, right: false, bottom: false, left: true };
-      let sameDirection = snake.isSameDirection(direction);
-      expect(sameDirection).toBe(true);
+      let length = levelSnake.parts.length;
+
+      levelSnake.increaseParts(levelSnake.parts[0], direction);
+      expect(levelSnake.parts.length).toEqual(length + 1);
+    });
+  });
+
+  describe('snake.isBody', () => {
+    it('should return null', () => {
+      let pos = new Vector(0, 0);
+      let body = levelSnake.isBody(pos);
+
+      expect(body).toEqual(null);
     });
 
-    it('should not be same direction as default, right', () => {
-      let direction = { up: false, right: true, bottom: false, left: false };
-      let sameDirection = snake.isSameDirection(direction);
-      expect(sameDirection).toBe(false);
-    });
-
-    it('should not be same direction as default, up', () => {
-      let direction = { up: true, right: false, bottom: false, left: false };
-      let sameDirection = snake.isSameDirection(direction);
-      expect(sameDirection).toBe(false);
+    it('should return string of body', () => {
+      let pos = new Vector(levelSnake.parts[2].x, levelSnake.parts[2].y);
+      let body = levelSnake.isBody(pos);
+      expect(body).toEqual('body');
     });
   });
 });
