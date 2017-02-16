@@ -1,26 +1,29 @@
 /**
  * a plan that describe the grid of the level
- * @type {Array}
+ * @type {Object}
  */
-export const SIMPLE_PLAN = [
-  'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
-  'x                         x',
-  'x                         x',
-  'x                         x',
-  'x        o                x',
-  'x                         x',
-  'x                         x',
-  'x                         x',
-  'x            s            x',
-  'x                         x',
-  'x                         x',
-  'x                         x',
-  'x                         x',
-  'x                         x',
-  'x                         x',
-  'x                         x',
-  'xxxxxxxxxxxxxxxxxxxxxxxxxxx'
-];
+export const SIMPLE_PLAN = {
+  ar: [
+    'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    'x                         x',
+    'x                         x',
+    'x                         x',
+    'x        o                x',
+    'x                         x',
+    'x                         x',
+    'x                         x',
+    'x            s            x',
+    'x                         x',
+    'x                         x',
+    'x                         x',
+    'x                         x',
+    'x                         x',
+    'x                         x',
+    'x                         x',
+    'xxxxxxxxxxxxxxxxxxxxxxxxxxx'
+  ],
+  score: 5
+};
 
 
 
@@ -62,9 +65,56 @@ export function createElement(container, tagName, id, className, styles) {
 };
 
 
+/**
+ * keyBoard arrows names
+ * @type {Enum}
+ */
 export const ARROWS_CODES = {
   up: 38,
   down: 40,
   left: 37,
   right: 39
 };
+
+
+/**
+ * arrows codes
+ * @type {Array}
+ */
+export const CODES_AR = [37, 38, 39, 40];
+
+
+/**
+ * copy content of object to a new object
+ * @param  {Object} obj object to be copy
+ * @return {Object}     new copy of the object
+ */
+export function copy(obj) {
+  let newObj = {};
+
+  for(let prop in obj) {
+    newObj[prop] = obj[prop];
+  }
+
+  return newObj
+}
+
+
+
+/**
+ * event names that will be used
+ * to trigger sounds through the game.
+ * @type {Object}
+ */
+export const EVENTS = {
+  fed      : 'snake.fed',
+  pause    : 'snake.pause',
+  start    : 'snake.start',
+  lost     : 'snake.lost',
+  topScore : 'snake.topscore',
+  newLevel : 'snake.newlevel',
+  over     : 'snake.gameover',
+  completed: 'snake.completed',
+  hitWall  : 'snake.hitwall',
+  hitBody  : 'snake.hitbody'
+}

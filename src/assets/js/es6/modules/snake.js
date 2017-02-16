@@ -10,8 +10,7 @@ export class Snake {
     this.pos = pos;
     this.size = new Vector(1, 1);
     this.speed = new Vector(0, 0);
-    this.step = 0.005;
-    this.maxSpeed = 10;
+    this.step = 1;
     this.direction = {
       up    : false,
       right : false,
@@ -20,7 +19,7 @@ export class Snake {
     };
     this.newDirection = null;
     this.type = 'snake';
-    this.parts = [];
+    this.parts = [new Vector(pos.x, pos.y)];
   }
 
 
@@ -32,112 +31,110 @@ export class Snake {
    * @param  {Object} direction boolean of keys up, right, bottom and left
    */
   move(level, direction) {
-    let motion,
-        newPos,
-        obstacle,
-        otherActor,
-        body,
-        sameDirection;
+    let motion, newPos, obstacle, otherActor, body;
 
-    if(!this.newDirection)
-      this.isSameDirection(direction);
-
-    if(this.newDirection) {
-
-      if(this.newDirection.left || this.newDirection.right) {
-        if((this.pos.y % 1) * 10 >= 9 || (this.pos.y % 1) * 10 <= 1){
-          this.pos.y = Math.round(this.pos.y)
-          direction = this.copyDirection(direction, this.newDirection);
-          this.newDirection = null;
-          this.direction = this.copyDirection(this.direction, direction);
-        } else {
-          direction = this.copyDirection(direction, this.direction);
-        }
-      } else if(this.newDirection.up || this.newDirection.down) {
-        if((this.pos.x % 1) * 10 >= 9 || (this.pos.x % 1) * 10 <= 1) {
-          this.pos.x = Math.round(this.pos.x)
-          direction = this.copyDirection(direction, this.newDirection);
-          this.newDirection = null;
-          this.direction = this.copyDirection(this.direction, direction);
-        } else {
-          direction = this.copyDirection(direction, this.direction);
-        }
-      }
-    } else {
-      this.direction = this.copyDirection(this.direction, direction);
+    // if opposite direction use the old direction
+    if(
+      (direction.left && this.direction.right) ||
+      (direction.right && this.direction.left) ||
+      (direction.up && this.direction.down) ||
+      (direction.down && this.direction.up)
+      ){
+      direction = utils.copy(this.direction);
     }
 
+    // reset speed to determine the new direction
     this.speed.x = 0;
     this.speed.y = 0;
 
-    if(direction.left) this.speed.x -= this.maxSpeed;
-    if(direction.right) this.speed.x += this.maxSpeed;
-    if(direction.up) this.speed.y -= this.maxSpeed;
-    if(direction.down) this.speed.y += this.maxSpeed;
+    if(direction.left) this.speed.x -= this.step;
+    if(direction.right) this.speed.x += this.step;
+    if(direction.up) this.speed.y -= this.step;
+    if(direction.down) this.speed.y += this.step;
 
-    if(direction.left || direction.right)
-      motion = new Vector(this.speed.x * this.step, 0);
-    else if(direction.up || direction.down)
-      motion = new Vector(0, this.speed.y * this.step);
-
+    // detection the amount of motion depending on direction
+    if(direction.left || direction.right){
+      motion = new Vector(this.speed.x, 0);
+    } else if(direction.up || direction.down){
+      motion = new Vector(0, this.speed.y);
+    }
 
     newPos = this.pos.plus(motion, this);
     obstacle = level.isObstacle(newPos, this.size);
     otherActor = level.isActor(this, newPos);
+    body = this.isBody(newPos);
 
-
-    if(obstacle){
+    if(obstacle) {
       level.snakeTouched(obstacle);
-    } else if(otherActor && otherActor.type === 'body') {
-      level.snakeTouched(otherActor.type, otherActor);
-      this.pos = newPos;
-    } else {
+      level.sounds.hitWall.play();
+    } else if(body) {
+      level.snakeTouched(body);
+      level.sounds.hitBody.play();
+    } else if(otherActor && otherActor.type === 'food') {
+      this.increaseParts(this.pos, direction);
+      level.sounds.fed.play();
 
-      if(otherActor && otherActor.type === 'food'){
-        level.increaseSnakeLength(this);
-        otherActor.updateFoodPos(level, utils.getRandom);
-        this.step += 0.002;
-      }
+      level.score ++;
+      level.snakeTouched(otherActor.type);
 
-      if(level.actors.some(actor => actor.type === 'body'))
-        level.updateBody(this.pos);
-
-      this.pos = newPos;
+      otherActor.updateFoodPos(level, utils.getRandom);
     }
+
+    this.updateBody(newPos);
+    this.direction = utils.copy(direction);
 
   }
 
 
 
   /**
-   * checks for new direction before move to new direction
-   * @param  {Object}  direction Vector instance x, y coordinates
-   * @return {Boolean}           same direction or not
+   * update snake parts by remove the last part and add it
+   * in the front at the new position
+   * @param  {Object<Vector>}   pos   new position should snake go to
    */
-  isSameDirection(direction) {
-    let same = true;
+  updateBody(pos) {
+    this.parts.pop();
+    this.parts.unshift(pos);
+    this.pos = pos;
+  }
 
-    for(let dir in direction) {
-      if(this.direction[dir] === direction[dir]) {
-        same = true;
-      } else {
-        // this.newDirection = direction;
-        this.newDirection = this.copyDirection(this.newDirection, direction);
-        return false;
+
+
+  /**
+   * add new part to the queue at the last position depending
+   * on the direction and size
+   * @param  {Object<Vector>}   pos       current position of the last part
+   * @param  {Object<boolean>}  direction
+   */
+  increaseParts(pos, direction) {
+    let newPos;
+
+    if(direction.up) newPos = pos.plus(new Vector(0, -1));
+    if(direction.down) newPos = pos.plus(new Vector(0, -1));
+    if(direction.left) newPos = pos.plus(new Vector(1, 0));
+    if(direction.right) newPos = pos.plus(new Vector(-1, 0));
+    this.parts.push(newPos);
+  }
+
+
+
+  /**
+   * check if the new position contains a body part
+   * @param  {Object<Vector>}  pos position of x and y
+   * @return {String}              string of body or null
+   */
+  isBody(pos) {
+    let body = null;
+    this.parts.forEach(part => {
+      if( pos.x + this.size.x > part.x &&
+          pos.x < this.size.x + part.x &&
+          pos.y + this.size.y > part.y &&
+          pos.y < this.size.y + part.y ){
+        body = 'body';
+        return;
       }
-    }
-
-    return same;
+    });
+    return body;
   }
 
-  copyDirection(des, src) {
-    if(des === null) {
-      des = Object.create(null)
-    }
-
-    for(let prop in src) {
-      des[prop] = src[prop];
-    }
-    return des;
-  }
 }

@@ -1,44 +1,36 @@
 import { Snake } from './snake';
-import { Body }  from './snake-body';
 import { Food }  from './food';
 import { Vector } from './vector';
 
+/**
+ * actors types to be used in determining the game instances
+ * @type {Object}
+ */
 const ACTORS_TYPES = {
   'o': Food,
-  's': Snake,
-  'z': Body
+  's': Snake
 };
+
+
 
 /**
  * Level: creates a level from a plan that describe
  * current environment of the game
- * @param {Array<String>}  plan  array of strings (nxm);
+ * @param {Array<String>}  plan     array of strings (nxm);
+ * @param {Object}         sounds   different sounds of the game events;
  */
 export class Level {
-  constructor(plan) {
-    this.width = plan[0].length;
-    this.height = plan.length;
-    this.grid = [];
+  constructor(plan, sounds) {
+    this.width = plan.ar[0].length;
+    this.height = plan.ar.length;
     this.actors = [];
-    this.bodies = [];
+    this.grid = this.getGrid(plan.ar);
     this.status = null;
-
-    plan.forEach((line, i) => {
-      let gridLine = [];
-
-      [].forEach.call(line, (ch, k) => {
-        let chType = null;
-        let Actor = ACTORS_TYPES[ch];
-
-        if(Actor) this.actors.push(new Actor(new Vector(k, i)));
-
-        if(ch === 'x') chType = 'wall';
-
-        gridLine.push(chType);
-      });
-
-      this.grid.push(gridLine);
-    });
+    this.score = 0;
+    this.frames = 0;
+    this.died = false;
+    this.maxScore = plan.score;
+    this.sounds = sounds;
   }
 
   /**
@@ -48,25 +40,44 @@ export class Level {
    *                            except the dedicated direction
    */
   animate(direction) {
+
+    // depending on frames number
+    // generating a long frame and it's a performance issue
+    // so look for another way to slow down the animation
+    // and make it smooth at the same time, and take into account the grid !!.
+    if(this.frames > 1000)
+      this.frames = 0;
+    else
+      this.frames ++;
+
+    if(
+       (this.score < 20 && this.frames % 8 !== 0) || 
+       (this.score >= 20 && this.score < 40 && this.frames % 6 !== 0) ||
+       (this.score >= 40 && this.frames % 4 !== 0)
+      ) {
+      return true;
+    }
+
     this.actors.forEach(actor => {
       if(actor.type === 'snake') {
         actor.move(this, direction);
       }
-    })
+    });
+    return true;
   }
 
 
   /**
    * check for walls inside the game
-   * @param  {Object}  pos  Vector instance of new x, y coordinates
-   * @param  {Object}  size Vector instance of actor size
-   * @return {String}       'wall'
+   * @param  {Object<Vector>}  pos   Vector instance of new x, y coordinates
+   * @param  {Object}          size  Vector instance of actor size
+   * @return {String}                'wall'
    */
   isObstacle(pos, size) {
     let xStart = Math.floor(pos.x);
-    let xEnd = Math.ceil(pos.x + size.x);
+    let xEnd   = Math.ceil(pos.x + size.x);
     let yStart = Math.floor(pos.y);
-    let yEnd = Math.ceil(pos.y + size.y);
+    let yEnd   = Math.ceil(pos.y + size.y);
 
     for(let i = xStart; i < xEnd; i++) {
       for(let k = yStart; k < yEnd; k++) {
@@ -80,17 +91,20 @@ export class Level {
   /**
    * check for actor type food or body parts
    * @param  {Object}  actor instance of Snake
+   * @param  {Object<Vector>}  newPos new position to check empty or have another
+   *                                  actor.
    * @return {Object}        instance of Body / Food
    */
-  isActor(actor) {
+  isActor(actor, newPos) {
+    newPos = (newPos) ? newPos : actor.pos;
     for(let i = 0; i < this.actors.length; i++) {
       let otherActor = this.actors[i];
 
       if( otherActor !== actor &&
-          actor.pos.x + actor.size.x > otherActor.pos.x &&
-          actor.pos.x < otherActor.pos.x + otherActor.size.x &&
-          actor.pos.y + actor.size.y > otherActor.pos.y &&
-          actor.pos.y < otherActor.pos.y + otherActor.size.y
+          newPos.x + actor.size.x > otherActor.pos.x &&
+          newPos.x < otherActor.pos.x + otherActor.size.x &&
+          newPos.y + actor.size.y > otherActor.pos.y &&
+          newPos.y < otherActor.pos.y + otherActor.size.y
         ) {
         return otherActor;
       }
@@ -100,38 +114,44 @@ export class Level {
 
 
   /**
-   * add Body instance to the levels actors
-   * that act like snake body parts
+   * get a grid nxm as the plan array length and its string length and save actors
+   * to the level instance actors snake/food .. etc
+   * @param  {Array<String>} plan array that determine the shape of the level
+   * @return {Array<Array>}          array(nxm) as n is the plan string legnth
+   *                              and m is the plan length and contains wall or null.
    */
-  increaseSnakeLength(snake, direction) {
-    let bodies = this.actors.filter(actor => actor.type === 'body');
-    let lastBodyPosX = (bodies.length) ? bodies[bodies.length - 1].pos.x : snake.pos.x + snake.size.x;
-    let lastBodyPosY = (bodies.length) ? bodies[bodies.length - 1].pos.y : snake.pos.y + snake.size.y;
+  getGrid(plan) {
+    let grid = [];
+    plan.forEach((line, i) => {
+      let gridLine = [];
 
-    this.actors.push(new Body(new Vector(lastBodyPosX, lastBodyPosY)));
-    this.bodies.push(new Body(new Vector(lastBodyPosX, lastBodyPosY)));
+      [].forEach.call(line, (ch, k) => {
+        let chType = null;
+        let Actor = ACTORS_TYPES[ch];
+
+        if(Actor) this.actors.push(new Actor(new Vector(k, i)));
+        if(ch === 'x') chType = 'wall';
+
+        gridLine.push(chType);
+      });
+
+      grid.push(gridLine);
+    });
+
+    return grid;
   }
 
 
 
   /**
-   * update body instances depending on new postion
-   * @param  {Object} pos Vector instance x, y coordinates
+   * determine the status of the level depending on the obstacle
+   * @param  {String} obstacle type of obstacle wall/body/food
    */
-  updateBody(pos) {
-    let bodies = this.actors.filter(actor => actor.type === 'body');
-    bodies.reverse().forEach((body, i, ar) => {
-      if(i < ar.length - 1) {
-        body.pos = new Vector(ar[i + 1].pos.x, ar[i + 1].pos.y)
-      } else {
-        body.pos = new Vector(pos.x, pos.y);
-      }
-    });
-
-  }
-
-
-  snakeTouched() {
-    // console.log('touched', arguments[0], arguments[1]);
+  snakeTouched(obstacle) {
+    if(obstacle === 'wall' || obstacle === 'body') {
+      this.status = 'lost';
+    } else if(obstacle === 'food') {
+      if(this.maxScore <= this.score) this.status = 'win';
+    }
   }
 }

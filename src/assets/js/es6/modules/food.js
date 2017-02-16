@@ -1,7 +1,9 @@
 import { Vector } from './vector';
+
+
 /**
  * food of the snake and its position x, y coordinates
- * @param {Object}  Vector instance of x,y coordinates 
+ * @param {Object<Vector>}  Vector instance of x,y coordinates 
  */
 export class Food {
   constructor(pos) {
@@ -11,14 +13,21 @@ export class Food {
   }
 
 
+  /**
+   * updates the food position to a random clear position
+   * @param  {Object<Level>} level      current level
+   * @param  {Function} randomFunc callback to generate random number
+   */
   updateFoodPos(level, randomFunc) {
-    let newPos = new Vector(randomFunc(2, level.width - 1), randomFunc(2, level.height - 1));
-    let obstacle = level.isObstacle(newPos, this.size);
-    let otherActor = level.isActor(this);
+    let newPos     = new Vector(randomFunc(2, level.width - 1), randomFunc(2, level.height - 1)),
+        obstacle   = level.isObstacle(newPos, this.size),
+        otherActor = level.isActor(this),
+        snake      = level.actors.filter(actor => actor.type === 'snake')[0],
+        body       = snake.isBody(newPos);
 
-    // if(!obstacle && !otherActor)
+    if(!obstacle && !otherActor && !body)
       this.pos = newPos;
-    // else
-    //   this.updateFoodPos(level, randomFunc);
+    else
+      this.updateFoodPos(level, randomFunc);
   }
 }

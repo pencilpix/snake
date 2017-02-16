@@ -1,5 +1,7 @@
 /**
- * vector
+ * construct a position to a given x, y coordinates value
+ * @param  {Number} x position of x axis
+ * @param  {Number} y Position of y axis
  */
 export class Vector {
   constructor(x, y) {
@@ -7,6 +9,12 @@ export class Vector {
     this.y = y;
   }
 
+
+  /**
+   * adding a vector to this vector instance and return a new one
+   * @param  {Object<Vector>} vec position to be added
+   * @return {Object<Vector>}     new position.
+   */
   plus(vec) {
     return new Vector(this.x + vec.x, this.y + vec.y);
   }

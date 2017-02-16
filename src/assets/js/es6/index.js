@@ -1,8 +1,8 @@
 import { Game } from './modules/game';
 import { PLANS } from './modules/levelPlans';
 
-window.game = new Game(PLANS, document.body, 20);
 
 document.addEventListener('DOMContentLoaded', () => {
+  let game = new Game(PLANS, document.querySelector('.game-container'), 48);
   game.start();
 });
