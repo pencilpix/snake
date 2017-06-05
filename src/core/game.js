@@ -164,9 +164,9 @@ export class Game {
 
     soundsKeys.forEach(key => {
       if( key === 'start')
-        sounds[key] = new Sound('/assets/sounds/' + key + '.mp3', EVENTS[key], false, true);
+        sounds[key] = new Sound(require('../static/sounds/' + key + '.mp3'), EVENTS[key], false, true);
       else
-        sounds[key] = new Sound('/assets/sounds/' + key + '.mp3', EVENTS[key]);
+        sounds[key] = new Sound(require('../static/sounds/' + key + '.mp3'), EVENTS[key]);
     });
 
     return sounds;

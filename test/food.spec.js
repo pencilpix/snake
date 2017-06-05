@@ -1,7 +1,7 @@
-import { Food } from '../../src/assets/js/es5/modules/food';
-import { Vector } from '../../src/assets/js/es5/modules/vector';
-import { Level } from '../../src/assets/js/es5/modules/level';
-import * as utils from '../../src/assets/js/es5/modules/utils';
+import { Food } from '../src/core/food';
+import { Vector } from '../src/core/vector';
+import { Level } from '../src/core/level';
+import * as utils from '../src/core/utils';
 
 describe('Food class', () => {
   let food, vector, level;

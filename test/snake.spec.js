@@ -1,7 +1,7 @@
-import { Snake } from '../../src/assets/js/es5/modules/snake';
-import { Level } from '../../src/assets/js/es5/modules/level';
-import * as utils from '../../src/assets/js/es5/modules/utils';
-import { Vector } from '../../src/assets/js/es5/modules/vector';
+import { Snake } from '../src/core/snake';
+import { Level } from '../src/core/level';
+import * as utils from '../src/core/utils';
+import { Vector } from '../src/core/vector';
 
 describe('Snake class', () => {
   let snake, vector, level, levelSnake;

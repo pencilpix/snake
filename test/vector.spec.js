@@ -1,4 +1,4 @@
-import { Vector } from '../../src/assets/js/es5/modules/vector';
+import { Vector } from '../src/core/vector';
 
 describe('Vector', () => {
   let vector;

@@ -1,4 +1,4 @@
-import * as utils from '../../src/assets/js/es5/modules/utils';
+import * as utils from '../src/core/utils';
 
 describe('utils methods', () => {
   describe('getRandom', () => {

@@ -1,8 +1,8 @@
-import { Level }  from '../../src/assets/js/es5/modules/level';
-import { Food }   from '../../src/assets/js/es5/modules/food';
-import { Snake }  from '../../src/assets/js/es5/modules/snake';
-import { Vector }  from '../../src/assets/js/es5/modules/vector';
-import * as utils from '../../src/assets/js/es5/modules/utils';
+import { Level }  from '../src/core/level';
+import { Food }   from '../src/core/food';
+import { Snake }  from '../src/core/snake';
+import { Vector }  from '../src/core/vector';
+import * as utils from '../src/core/utils';
 
 describe('Level class', () => {
   let level;
