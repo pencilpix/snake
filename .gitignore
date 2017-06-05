@@ -1,9 +1,3 @@
-src/assets/js/es5/
-src/assets/js/*.js
-src/assets/css
-
-test/*.spec.js
-
 .DS_Store
-
 node_modules
+coverage
