@@ -4,6 +4,8 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 node_js:
   - '6.9.5'
+install:
+  - yarn
 script:
   - npm run test
   - npm run build
