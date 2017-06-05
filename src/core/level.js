@@ -1,5 +1,5 @@
 import { Snake } from './snake';
-import { Food }  from './food';
+import { Food } from './food';
 import { Vector } from './vector';
 
 /**
@@ -8,18 +8,19 @@ import { Vector } from './vector';
  */
 const ACTORS_TYPES = {
   'o': Food,
-  's': Snake
+  's': Snake,
 };
-
 
 
 /**
  * Level: creates a level from a plan that describe
  * current environment of the game
- * @param {Array<String>}  plan     array of strings (nxm);
- * @param {Object}         sounds   different sounds of the game events;
  */
 export class Level {
+  /**
+   * @param {Array<String>}  plan     array of strings (nxm);
+   * @param {Object}         sounds   different sounds of the game events;
+   */
   constructor(plan, sounds) {
     this.width = plan.ar[0].length;
     this.height = plan.ar.length;
@@ -35,31 +36,32 @@ export class Level {
 
   /**
    * start animation depending on direction
-   * @param  {Object} direction up, right, bottom and left
+   * @param  { Object } direction up, right, bottom and left
    *                            all keys should have boolean false value
    *                            except the dedicated direction
+   * @return { Boolean }
    */
   animate(direction) {
-
     // depending on frames number
     // generating a long frame and it's a performance issue
     // so look for another way to slow down the animation
     // and make it smooth at the same time, and take into account the grid !!.
-    if(this.frames > 1000)
+    if (this.frames > 1000) {
       this.frames = 0;
-    else
+    } else {
       this.frames ++;
+    }
 
-    if(
-       (this.score < 20 && this.frames % 8 !== 0) || 
-       (this.score >= 20 && this.score < 40 && this.frames % 6 !== 0) ||
-       (this.score >= 40 && this.frames % 4 !== 0)
-      ) {
+    if (
+        (this.score < 20 && this.frames % 8 !== 0) ||
+        (this.score >= 20 && this.score < 40 && this.frames % 6 !== 0) ||
+        (this.score >= 40 && this.frames % 4 !== 0)
+       ) {
       return true;
     }
 
-    this.actors.forEach(actor => {
-      if(actor.type === 'snake') {
+    this.actors.forEach((actor) => {
+      if (actor.type === 'snake') {
         actor.move(this, direction);
       }
     });
@@ -75,50 +77,49 @@ export class Level {
    */
   isObstacle(pos, size) {
     let xStart = Math.floor(pos.x);
-    let xEnd   = Math.ceil(pos.x + size.x);
+    let xEnd = Math.ceil(pos.x + size.x);
     let yStart = Math.floor(pos.y);
-    let yEnd   = Math.ceil(pos.y + size.y);
+    let yEnd = Math.ceil(pos.y + size.y);
 
-    for(let i = xStart; i < xEnd; i++) {
-      for(let k = yStart; k < yEnd; k++) {
+    for (let i = xStart; i < xEnd; i++) {
+      for (let k = yStart; k < yEnd; k++) {
         return this.grid[k][i];
       }
     }
   }
 
 
-
   /**
    * check for actor type food or body parts
    * @param  {Object}  actor instance of Snake
-   * @param  {Object<Vector>}  newPos new position to check empty or have another
-   *                                  actor.
+   * @param  {Object<Vector>}  newPos new position to check empty or have
+   *                                  another actor.
    * @return {Object}        instance of Body / Food
    */
   isActor(actor, newPos) {
     newPos = (newPos) ? newPos : actor.pos;
-    for(let i = 0; i < this.actors.length; i++) {
+    for (let i = 0; i < this.actors.length; i++) {
       let otherActor = this.actors[i];
 
-      if( otherActor !== actor &&
+      if ( otherActor !== actor &&
           newPos.x + actor.size.x > otherActor.pos.x &&
           newPos.x < otherActor.pos.x + otherActor.size.x &&
           newPos.y + actor.size.y > otherActor.pos.y &&
           newPos.y < otherActor.pos.y + otherActor.size.y
-        ) {
+         ) {
         return otherActor;
       }
     }
   }
 
 
-
   /**
-   * get a grid nxm as the plan array length and its string length and save actors
-   * to the level instance actors snake/food .. etc
+   * get a grid nxm as the plan array length and its string length
+   * and save actors to the level instance actors snake/food .. etc
    * @param  {Array<String>} plan array that determine the shape of the level
    * @return {Array<Array>}          array(nxm) as n is the plan string legnth
-   *                              and m is the plan length and contains wall or null.
+   *                                  and m is the plan length and
+   *                                  contains wall or null.
    */
   getGrid(plan) {
     let grid = [];
@@ -129,8 +130,9 @@ export class Level {
         let chType = null;
         let Actor = ACTORS_TYPES[ch];
 
-        if(Actor) this.actors.push(new Actor(new Vector(k, i)));
-        if(ch === 'x') chType = 'wall';
+        if (Actor) this.actors.push(new Actor(new Vector(k, i)));
+
+        if (ch === 'x') chType = 'wall';
 
         gridLine.push(chType);
       });
@@ -142,16 +144,16 @@ export class Level {
   }
 
 
-
   /**
    * determine the status of the level depending on the obstacle
    * @param  {String} obstacle type of obstacle wall/body/food
    */
   snakeTouched(obstacle) {
-    if(obstacle === 'wall' || obstacle === 'body') {
+    if (obstacle === 'wall' || obstacle === 'body') {
       this.status = 'lost';
-    } else if(obstacle === 'food') {
-      if(this.maxScore <= this.score) this.status = 'win';
+    } else if (obstacle === 'food') {
+      if (this.maxScore <= this.score) this.status = 'win';
     }
   }
 }
+

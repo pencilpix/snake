@@ -27,11 +27,11 @@ export const PLANS = [
       'x                                   x',
       'x                                   x',
       'x                                   x',
-      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     ],
-    score: 10
-  }
-  ,{
+
+    score: 10,
+  }, {
     ar: [
       'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       'x                                   x',
@@ -53,11 +53,11 @@ export const PLANS = [
       'x xx                             xx x',
       'x x                               x x',
       'x                                   x',
-      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     ],
 
-    score: 40
-  },{
+    score: 40,
+  }, {
     ar: [
       'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       'x                                   x',
@@ -79,11 +79,11 @@ export const PLANS = [
       'x                                   x',
       'x  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  x',
       'x                                   x',
-      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     ],
 
-    score: 50
-  },{
+    score: 50,
+  }, {
     ar: [
       'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       'x                                   x',
@@ -105,11 +105,11 @@ export const PLANS = [
       'x    xxxxxxxxxxxxxxxxxxxxxxxxxx     x',
       'x                                   x',
       'x                                   x',
-      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     ],
 
-    score: 60
-  },{
+    score: 60,
+  }, {
     ar: [
       'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       'x                                   x',
@@ -131,9 +131,10 @@ export const PLANS = [
       'x    xxxxxxxxxxxxxxxxxxxxxxxxxx     x',
       'x                                   x',
       'x                                   x',
-      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     ],
 
-    score: 70
-  }
-]
+    score: 70,
+  },
+];
+
