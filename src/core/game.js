@@ -45,6 +45,11 @@ export class Game {
     function handler(event) {
       if (event.keyCode === 32) {
         _this.paused = !_this.paused;
+        if (_this.sounds.start.isPlaying) {
+          _this.sounds.start.pause();
+        } else {
+          _this.sounds.start.play();
+        }
         _this.sounds.pause.play();
       }
 
@@ -68,10 +73,15 @@ export class Game {
   startLevel() {
     if (this.level.status === null) {
       this.render();
+      this.sounds.start.play();
     } else if (this.level.status === 'win') {
       if (this.currentLevel + 1 < this.plans.length) {
         if (this.delay > 199) {
           this.stopSounds();
+          if (this.sounds.start.isPlaying) {
+            this.sounds.start.stop();
+          }
+
           this.sounds.newLevel.play();
         }
 
@@ -82,6 +92,11 @@ export class Game {
         if (this.delay < 1) {
           this.score += this.level.score;
           this.setLevel(this.currentLevel + 1);
+
+          if (!this.sounds.start.isPlaying) {
+            this.sounds.start.play();
+          }
+
           this.delay = 200;
         }
       } else {
@@ -89,6 +104,7 @@ export class Game {
         this.paused = true;
         if (this.currentLevel > 0) {
           this.stopSounds();
+          this.sounds.start.stop();
           this.sounds.completed.play();
         }
 
@@ -101,9 +117,18 @@ export class Game {
       this.display.message('sorry you are lost ... !\nTry Again\n ' +
                            Math.floor(this.delay / 50));
 
+      if (this.sounds.start.isPlaying) {
+        this.sounds.start.stop();
+      }
+
       if (this.delay < 1) {
         this.lives --;
         this.setLevel(this.currentLevel);
+
+        if (!this.sounds.start.isPlaying) {
+          this.sounds.start.play();
+        }
+
         this.delay = 200;
       }
     } else {
@@ -116,6 +141,7 @@ export class Game {
           this.display.hiScore = this.score;
         }
       }
+      this.sounds.start.stop();
       this.sounds.lost.play();
       this.paused = true;
 
@@ -162,8 +188,14 @@ export class Game {
    * begins the game
    */
   start() {
-    this.trackKeys();
-    this.startLevel();
+    if (this._isSoundsLoaded) {
+      this.trackKeys();
+      this.startLevel();
+      this.container.classList.remove('is-game-loading');
+    } else {
+      this.container.classList.add('is-game-loading');
+      setTimeout(this.start.bind(this), 1000);
+    }
   }
 
 
@@ -205,7 +237,7 @@ export class Game {
    */
   pauseSounds() {
     for (let sound in this.sounds) {
-      if (this.sounds.hasOwnProperty(sound)) {
+      if (this.sounds.hasOwnProperty(sound) && sound !== 'start') {
         this.sounds[sound].pause();
       }
     }
@@ -221,6 +253,24 @@ export class Game {
     this.currentLevel = n;
     this.level = new Level(this.plans[n], this.sounds);
     this.display.resetLevel(this.level);
+  }
+
+
+  /**
+   * get the whether all sounds is completely loaded or not
+   *
+   * @return { Boolean }
+   */
+  get _isSoundsLoaded() {
+    for (let sound in this.sounds) {
+      if (this.sounds.hasOwnProperty(sound)) {
+        if (!this.sounds[sound].isLoaded) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 }
 

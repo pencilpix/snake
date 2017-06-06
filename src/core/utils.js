@@ -125,3 +125,34 @@ export const EVENTS = {
   hitBody: 'snake.hitbody',
 };
 
+
+/**
+ * load media files asyncronously using promise and ajax
+ *
+ * @param { String } url the path to media file
+ * @return { Promise }
+ */
+export function loadMedia(url) {
+  return new Promise((resolve, reject) => {
+    let request = new XMLHttpRequest();
+
+    request.open('GET', url);
+    request.responseType = 'blob';
+
+    request.onload = () => {
+      if (request.status === 200) {
+        resolve(request.response);
+      } else {
+        reject(Error('the media file is not loaded successfully: ' +
+                      request.statusText));
+      }
+    };
+
+    request.onerror = () => {
+      reject(Error('network error, try again later'));
+    };
+
+    request.send();
+  });
+}
+

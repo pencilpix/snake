@@ -1,3 +1,6 @@
+/* eslint no-console: 0 */
+import { loadMedia } from './utils';
+
 /**
  * Sound class that create audio element depending on a url and event to trigger
  */
@@ -10,13 +13,12 @@ export class Sound {
    */
   constructor(url, eventName, autoPlay, loop) {
     this.element = document.createElement('audio');
-    this.element.src = url;
+    this.url = url;
     this.isLoaded = false;
+    this.isReady = false;
     this.event = eventName;
-    this.element.loop = loop || false;
+    this.loop = loop || false;
     this.load();
-
-    if (autoPlay) this.play();
   }
 
 
@@ -25,8 +27,16 @@ export class Sound {
    * play/pause and custom event to trigger playing.
    */
   load() {
-    this.element.addEventListener('canplay', () => {
+    loadMedia(this.url).then((response) => {
+      this.element.src = URL.createObjectURL(response);
+      this.element.load();
       this.isLoaded = true;
+    }).catch((error) => {
+      console.log(error, ' please refresh the game');
+    });
+
+    this.element.addEventListener('canplay', () => {
+      this.isReady = true;
     });
 
     this.element.addEventListener('play', () => {
@@ -36,6 +46,13 @@ export class Sound {
     this.element.addEventListener('pause', () => {
       this.isPlaying = false;
     });
+
+    this.element.addEventListener('ended', () => {
+      if (this.loop) {
+        this.stop();
+        this.play();
+      }
+    })
 
     addEventListener(this.event, () => {
       this.play();
@@ -48,7 +65,7 @@ export class Sound {
    * if it was playing
    */
   play() {
-    if (!this.isLoaded) setTimeout(this.play.bind(this), 200);
+    if (!this.isReady) setTimeout(this.play.bind(this), 200);
 
     if (this.isPlaying) this.stop();
 
