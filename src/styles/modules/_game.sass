@@ -1,0 +1,60 @@
+html,
+body
+  height: 100%
+  margin: 0
+  padding: 0
+  width: 100%
+
+.game-container
+  box-sizing: border-box
+  height: 100%
+  padding: 1rem
+  text-align: center
+  width: 100%
+
+  canvas
+    height: auto
+    max-height: 100%
+    max-width: 100%
+    width: auto
+
+  &.is-game-loading
+    overflow: hidden
+    position: relative
+
+    &::before
+      background-color: $light-green
+      background-image: url('../static/images/loading.png')
+      background-position: center center
+      background-repeat: no-repeat
+      background-size: 200px 200px
+      content: ''
+      height: 100%
+      left: 0
+      position: absolute
+      top: 0
+      width: 100%
+
+    &::after
+      animation: loadingKey 3s infinite
+      background-image: $loading-gradient
+      content: ''
+      display: block
+      height: 20px
+      left: 50%
+      position: absolute
+      top: 50%
+      transform: translate(-50%, -50%)
+      width: 60px
+
+
+@keyframes loadingKey
+  0%
+    left: -10%
+
+  50%
+    left: 50%
+
+  100%
+    left: 110%
+
