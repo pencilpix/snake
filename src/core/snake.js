@@ -3,25 +3,26 @@ import * as utils from './utils';
 
 /**
  * Snake is the snake head and its position and size
- * @param {Object} Vector instance of x, y coordinates
  */
 export class Snake {
+  /**
+   * @param {Object<Vector>} pos instance of x, y coordinates
+   */
   constructor(pos) {
     this.pos = pos;
     this.size = new Vector(1, 1);
     this.speed = new Vector(0, 0);
     this.step = 1;
     this.direction = {
-      up    : false,
-      right : false,
+      up: false,
+      right: false,
       down: false,
-      left  : true
+      left: true,
     };
     this.newDirection = null;
     this.type = 'snake';
     this.parts = [new Vector(pos.x, pos.y)];
   }
-
 
 
   /**
@@ -31,15 +32,19 @@ export class Snake {
    * @param  {Object} direction boolean of keys up, right, bottom and left
    */
   move(level, direction) {
-    let motion, newPos, obstacle, otherActor, body;
+    let motion;
+    let newPos;
+    let obstacle;
+    let otherActor;
+    let body;
 
     // if opposite direction use the old direction
-    if(
-      (direction.left && this.direction.right) ||
-      (direction.right && this.direction.left) ||
-      (direction.up && this.direction.down) ||
-      (direction.down && this.direction.up)
-      ){
+    if (
+        (direction.left && this.direction.right) ||
+        (direction.right && this.direction.left) ||
+        (direction.up && this.direction.down) ||
+        (direction.down && this.direction.up)
+       ) {
       direction = utils.copy(this.direction);
     }
 
@@ -47,15 +52,15 @@ export class Snake {
     this.speed.x = 0;
     this.speed.y = 0;
 
-    if(direction.left) this.speed.x -= this.step;
-    if(direction.right) this.speed.x += this.step;
-    if(direction.up) this.speed.y -= this.step;
-    if(direction.down) this.speed.y += this.step;
+    if (direction.left) this.speed.x -= this.step;
+    if (direction.right) this.speed.x += this.step;
+    if (direction.up) this.speed.y -= this.step;
+    if (direction.down) this.speed.y += this.step;
 
     // detection the amount of motion depending on direction
-    if(direction.left || direction.right){
+    if (direction.left || direction.right) {
       motion = new Vector(this.speed.x, 0);
-    } else if(direction.up || direction.down){
+    } else if (direction.up || direction.down) {
       motion = new Vector(0, this.speed.y);
     }
 
@@ -64,13 +69,13 @@ export class Snake {
     otherActor = level.isActor(this, newPos);
     body = this.isBody(newPos);
 
-    if(obstacle) {
+    if (obstacle) {
       level.snakeTouched(obstacle);
       level.sounds.hitWall.play();
-    } else if(body) {
+    } else if (body) {
       level.snakeTouched(body);
       level.sounds.hitBody.play();
-    } else if(otherActor && otherActor.type === 'food') {
+    } else if (otherActor && otherActor.type === 'food') {
       this.increaseParts(this.pos, direction);
       level.sounds.fed.play();
 
@@ -82,9 +87,7 @@ export class Snake {
 
     this.updateBody(newPos);
     this.direction = utils.copy(direction);
-
   }
-
 
 
   /**
@@ -99,7 +102,6 @@ export class Snake {
   }
 
 
-
   /**
    * add new part to the queue at the last position depending
    * on the direction and size
@@ -109,13 +111,12 @@ export class Snake {
   increaseParts(pos, direction) {
     let newPos;
 
-    if(direction.up) newPos = pos.plus(new Vector(0, -1));
-    if(direction.down) newPos = pos.plus(new Vector(0, -1));
-    if(direction.left) newPos = pos.plus(new Vector(1, 0));
-    if(direction.right) newPos = pos.plus(new Vector(-1, 0));
+    if (direction.up) newPos = pos.plus(new Vector(0, -1));
+    if (direction.down) newPos = pos.plus(new Vector(0, -1));
+    if (direction.left) newPos = pos.plus(new Vector(1, 0));
+    if (direction.right) newPos = pos.plus(new Vector(-1, 0));
     this.parts.push(newPos);
   }
-
 
 
   /**
@@ -125,16 +126,16 @@ export class Snake {
    */
   isBody(pos) {
     let body = null;
-    this.parts.forEach(part => {
-      if( pos.x + this.size.x > part.x &&
+    this.parts.forEach((part) => {
+      if (pos.x + this.size.x > part.x &&
           pos.x < this.size.x + part.x &&
           pos.y + this.size.y > part.y &&
-          pos.y < this.size.y + part.y ){
+          pos.y < this.size.y + part.y ) {
         body = 'body';
         return;
       }
     });
     return body;
   }
-
 }
+

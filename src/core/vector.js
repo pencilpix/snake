@@ -1,9 +1,11 @@
 /**
  * construct a position to a given x, y coordinates value
- * @param  {Number} x position of x axis
- * @param  {Number} y Position of y axis
  */
 export class Vector {
+  /**
+   * @param  {Number} x position of x axis
+   * @param  {Number} y Position of y axis
+   */
   constructor(x, y) {
     this.x = x;
     this.y = y;
