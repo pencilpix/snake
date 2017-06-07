@@ -8,7 +8,7 @@ is a simple JS Snake Game, just for fun and training!
 [![devDependency status](https://david-dm.org/pencilpix/snake/dev-status.svg)](https://david-dm.org/pencilpix/snake/?type=dev)
 
 
-## masterment instructions:
+## development instructions:
 
 1. assume that `nodejs` is installed on your machine.
 2. clone project:
