@@ -13,13 +13,15 @@ export class Game {
    * @param  {Array} plans  collection of plans
    * @param  {HTMLElement} container element to contain the display of the game
    * @param  {Number} scale Positive number to scale the game up for better view
+   * @param  {HTMLElement} btn start button.
    */
-  constructor(plans, container, scale) {
+  constructor(plans, container, scale, btn) {
     this.plans = plans;
     this.currentLevel = 0;
     this.sounds = this.createSounds();
     this.level = new Level(this.plans[this.currentLevel], this.sounds);
     this.container = container;
+    this.btn = btn;
     this.scale = scale || 10;
     this.direction = {up: false, right: false, down: false, left: true};
     this.display = new Display(this.container, this.level, this.scale);
@@ -28,6 +30,8 @@ export class Game {
     this.score = 0;
     this.lives = 3;
     this.delay = 200;
+
+    this.load();
   }
 
 
@@ -64,6 +68,49 @@ export class Game {
     }
 
     addEventListener('keydown', handler);
+  }
+
+
+  /**
+   * tracking touch and update direction depending on touch position
+   */
+  trackTouch() {
+    let startPositionX = null;
+    let startPositionY = null;
+
+    addEventListener('dblclick', () => {
+      this.paused = !this.paused;
+    });
+
+    addEventListener('touchstart', (event) => {
+      let touch = event.changedTouches[0];
+
+      startPositionX = touch.pageX;
+      startPositionY = touch.pageY;
+    });
+
+    addEventListener('touchend', (event) => {
+      let touch = event.changedTouches[0];
+      let positionX = touch.pageX - startPositionX;
+      let positionY = touch.pageY - startPositionY;
+      let direction = null;
+
+      if (Math.abs(positionX) > Math.abs(positionY)) {
+        direction = (positionX < 0) ? 'left' : 'right';
+      } else {
+        direction = (positionY < 0) ? 'up' : 'down';
+      }
+
+      if (!direction) {
+        return;
+      }
+
+      for (let dir in this.direction) {
+        if (this.direction.hasOwnProperty(dir)) {
+          this.direction[dir] = (dir === direction) ? true : false;
+        }
+      }
+    });
   }
 
 
@@ -185,17 +232,38 @@ export class Game {
 
 
   /**
-   * begins the game
+   * check if game is loading, then attach click event to start
+   * the game on dedicated button.
+   */
+  load() {
+    if (this._isSoundsLoaded) {
+      this.btn.addEventListener('click', this.start.bind(this));
+      document.body.classList.remove('is-game--loading');
+      document.body.classList.add('is-game--loaded');
+      return;
+    } else {
+      setTimeout(this.load.bind(this), 1000);
+    }
+  }
+
+  /**
+   * start playing
    */
   start() {
-    if (this._isSoundsLoaded) {
-      this.trackKeys();
-      this.startLevel();
-      this.container.classList.remove('is-game-loading');
-    } else {
-      this.container.classList.add('is-game-loading');
-      setTimeout(this.start.bind(this), 1000);
+    let forced = null;
+
+    if (this._isTouchDevice) {
+      if (!forced) {
+        this._forceSounds();
+        forced = true;
+      }
+      this.trackTouch();
     }
+
+    this.trackKeys();
+    this.startLevel();
+    document.body.classList.remove('is-game--loaded');
+    document.body.classList.add('is-game--started');
   }
 
 
@@ -257,6 +325,19 @@ export class Game {
 
 
   /**
+   * hacky way to force mobile preload all music and effects files by
+   * playing them then stoping imediately.
+   */
+  _forceSounds() {
+    for (let sound in this.sounds) {
+      if (this.sounds.hasOwnProperty(sound)) {
+        this.sounds[sound].play();
+        this.sounds[sound].pause();
+      }
+    }
+  }
+
+  /**
    * get the whether all sounds is completely loaded or not
    *
    * @return { Boolean }
@@ -271,6 +352,21 @@ export class Game {
     }
 
     return true;
+  }
+
+
+  /**
+   * check if there is touch event or not
+   *
+   * @return { Boolean }
+   */
+  get _isTouchDevice() {
+    try {
+      document.createEvent('TouchEvent');
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 }
 
